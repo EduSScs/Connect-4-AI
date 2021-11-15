@@ -1,0 +1,9 @@
+To run the program simply select a number between 1 and 3 for the difficulty.
+
+Then play by simple selecting the column to place your chip "X"
+
+The first player to connect 4 of their chip in any direction (Horizontal, Vertical or Diagonal) wins
+
+If you wish to try a depth thats not offered simply set a number for the variable DEPTH in line 18
+
+Take into account however that any depth beyond 6 will make the program extremey slow
