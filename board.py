@@ -230,38 +230,45 @@ def heuristic(board):
 
 # AI MOVE MINMAX
 
-def minimax(depth, board, maximizing):
+def minimax(depth, board, maximizing, alpha, beta):
     moves = possible_moves(board)
 
-    if depth==0 :
+    if depth==0 or len(moves)==0:
         return heuristic(board), None
 
     #Maximizing player
     if maximizing:
-        max_value = -99999999999
+        max_value = -99999999999999
         pick = random.choice(moves)
         for x in moves:
             fake_board = deepcopy(board)
             move(fake_board,x+1,"O")
             # We obtain the boards heuristic value
-            new_number = minimax(depth-1,fake_board,False)[0]
-            if (new_number>=max_value):
+            new_number = minimax(depth-1,fake_board,False, alpha, beta)[0]
+            
+            if (new_number>max_value):
                 max_value = new_number
                 pick = x
+            alpha = max(alpha,max_value)
+            if alpha>=beta:
+                break
         return max_value, pick
 
     # Minimizing player
-    if maximizing==False:
-        min_value = 99999999999
+    else:
+        min_value = 99999999999999
         pick = random.choice(moves)
         for x in moves:
             fake_board = deepcopy(board)
             move(fake_board,x+1,"X")
             # We obtain the boards heuristic value
-            new_number = minimax(depth-1,fake_board,True)[0]
-            if (new_number<=min_value):
+            new_number = minimax(depth-1,fake_board,True, alpha, beta)[0]
+            if (new_number<min_value):
                 min_value = new_number
                 pick = x
+            beta = min(beta, min_value)
+            if alpha>=beta:
+                break
         return min_value, pick
         
             
@@ -286,7 +293,7 @@ if difficulty==1:
 elif difficulty==2:
     DEPTH=4
 else:
-    DEPTH=5
+    DEPTH=6
 
 
 display(main_board)
@@ -307,12 +314,12 @@ while True:
     end = check_winner(main_board, True)
     if end:
         print("\nThanks for playing, X wins")
-        time.sleep(5)
+        time.sleep(2)
         break
     # Creates a copy of the board for the AI to plan its moves so it does not affect the real board
     fake = main_board.copy()
     # Calls the AI to play its turn
-    h, pick = minimax(DEPTH,fake,True)
+    pick = minimax(DEPTH,fake,True, -math.inf, math.inf)[1]
     move (main_board, pick+1, "O")
     print("AI chose column: "+str(pick+1))
     display(main_board)
@@ -320,7 +327,7 @@ while True:
     end = check_winner(main_board, True)
     if end:
         print("\n Thanks for playing, O wins")
-        time.sleep(5)
+        time.sleep(2)
         break
    
     
